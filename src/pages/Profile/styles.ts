@@ -5,6 +5,12 @@ export const Container = styled.View`
   flex: 1;
   justify-content: center;
   padding: 0 30px ${Platform.OS === 'android'? 180 : 40}px;
+  position: relative;
+`;
+
+export const ContainerHeader = styled.View`
+  flex-direction: row;
+  justify-content: space-between
 `;
 
 export const Title = styled.Text`
@@ -15,13 +21,10 @@ export const Title = styled.Text`
   text-align: left;
 `;
 
-
-
 export const UserAvatar = styled.Image`
   width: 186px;
   height: 186px;
   border-radius: 98px;
-  margin-top: 64px;
   align-self: center;
 `;
 
@@ -35,6 +38,6 @@ export const UserAvatarButton = styled.TouchableOpacity`
 
 export const LogoutButton = styled.TouchableOpacity`
   margin-top: 40px;
-  text-align: right;
+
 `;
 

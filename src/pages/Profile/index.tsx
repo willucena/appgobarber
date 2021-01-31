@@ -25,6 +25,7 @@ import {
   UserAvatarButton,
   UserAvatar,
   Container,
+  ContainerHeader,
   Title,
   BackButton,
   LogoutButton
@@ -173,12 +174,15 @@ const Profile: React.FC = () => {
       contentContainerStyle={{ flex: 1}}
     >
       <Container>
+        <ContainerHeader>
         <BackButton onPress={hendleGoBack}>
           <Icon name="chevron-left" size={24} color="#999591"/>
         </BackButton>
         <LogoutButton onPress={handleLogout}>
-          <Icon name="chevron-left" size={24} color="#999591"/>
+          <Icon name="power" size={24} color="#999591"/>
         </LogoutButton>
+        </ContainerHeader>
+       
         <UserAvatarButton onPress={handleUpdateAvatar}>
             <UserAvatar source={{ uri: user.avatar_url }}/>
         </UserAvatarButton>
