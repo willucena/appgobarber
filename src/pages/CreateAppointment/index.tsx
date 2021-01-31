@@ -65,7 +65,15 @@ const CreateAppointment: React.FC = () => {
 
     // State que define se o provider (cabeleireiro) foi selecionado ou não
     const [selectedProvider, setSelectedProvider] = useState(params.providerId);
-
+    const minimumDate = useMemo(() => {
+      const today = new Date();
+  
+      if (today.getHours() >= 17) {
+        return new Date(today.setDate(today.getDate() + 1));
+      }
+  
+      return today;
+    }, []);
     useEffect(()=> {
       api.get('providers').then((response) => {
         setProviders(response.data)
@@ -198,6 +206,7 @@ const CreateAppointment: React.FC = () => {
             textColor='#f4ede8'
             onChange={(_, date) => date && setSelectedDate(date)}
             value={selectedDate}
+            minimumDate={minimumDate}
             />}
         </Calendar>
 

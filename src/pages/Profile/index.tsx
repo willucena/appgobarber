@@ -9,6 +9,7 @@ import {
   TextInput,
   Alert
 }from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker/src';
 import Icon from 'react-native-vector-icons/Feather';
 import {useNavigation} from '@react-navigation/native';
 import { Form } from '@unform/mobile';
@@ -25,7 +26,8 @@ import {
   UserAvatar,
   Container,
   Title,
-  BackButton
+  BackButton,
+  LogoutButton
 } from './styles';
 
 interface ProfileFormData {
@@ -36,7 +38,7 @@ interface ProfileFormData {
   password_confirmation: string;
 }
 const Profile: React.FC = () => {
-  const {user, updateUser} = useAuth();
+  const {user, updateUser, signOut} = useAuth();
 
   const formRef = useRef<FormHandles>(null);
   const navigation = useNavigation();
@@ -46,7 +48,6 @@ const Profile: React.FC = () => {
   const oldPasswordInputRef = useRef<TextInput>(null)
   const passwordInputRef = useRef<TextInput>(null)
   const confirmPasswordInputRef = useRef<TextInput>(null)
-
   const handleSaveProfile = useCallback(async (data: ProfileFormData) => {
     try {
       formRef.current?.setErrors({});
@@ -117,11 +118,48 @@ const Profile: React.FC = () => {
         'Ocorreu um erro ao atualizar, tente novamente.',
       );
     }
-  }, []);
+  }, [navigation, updateUser]);
 
   const hendleGoBack = useCallback(()=> {
     navigation.goBack();
-  },[navigation]);
+  },[navigation]); 
+  
+  const handleLogout = useCallback(()=> {
+    signOut();
+  },[]);
+
+  const handleUpdateAvatar = useCallback(() => {
+    const options = {
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+      launchImageLibrary(options, (response) => {
+      if (response.didCancel) {
+        return;
+      } 
+       if (response.error) {
+       Alert.alert('Erro ao atualizar avatar');
+       return;
+      } 
+
+      const source = { uri: response.uri}
+
+      const data = new FormData();
+      data.append('avatar', {
+        type: 'image/jpeg',
+        name: `${user.id}.jpg`,
+        uri: response.uri
+      });
+
+      api.patch('users/avatar', data)
+        .then(apiResponse => {
+            updateUser(apiResponse.data)
+        });
+
+    })
+  },[updateUser, user.id])
 
   return (
     <>
@@ -138,7 +176,10 @@ const Profile: React.FC = () => {
         <BackButton onPress={hendleGoBack}>
           <Icon name="chevron-left" size={24} color="#999591"/>
         </BackButton>
-        <UserAvatarButton>
+        <LogoutButton onPress={handleLogout}>
+          <Icon name="chevron-left" size={24} color="#999591"/>
+        </LogoutButton>
+        <UserAvatarButton onPress={handleUpdateAvatar}>
             <UserAvatar source={{ uri: user.avatar_url }}/>
         </UserAvatarButton>
    

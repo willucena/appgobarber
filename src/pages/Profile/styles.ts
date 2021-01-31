@@ -33,3 +33,8 @@ export const UserAvatarButton = styled.TouchableOpacity`
   margin-top: 32px;
 `;
 
+export const LogoutButton = styled.TouchableOpacity`
+  margin-top: 40px;
+  text-align: right;
+`;
+
